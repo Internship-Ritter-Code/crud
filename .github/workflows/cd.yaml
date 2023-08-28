@@ -23,3 +23,4 @@ jobs:
             sudo git pull
             cd /www/wwwroot/
             sudo chown -R www:www internapp.rittercoding.com/ && sudo +x cicd.sh && sudo sh cicd.sh
+            yes
