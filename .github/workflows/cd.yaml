@@ -22,5 +22,6 @@ jobs:
             sudo git reset --hard
             sudo git pull
             cd /www/wwwroot/
-            sudo chown -R www:www internapp.rittercoding.com/ && sudo +x cicd.sh && sudo sh cicd.sh
+            sudo chown -R www:www internapp.rittercoding.com/
+            sudo sh cicd.sh
             yes
