@@ -123,6 +123,16 @@ class PostController extends Controller
         return view('posts.show', compact('post'));
     }
 
+    public function showApi(string $id)
+    {
+        //get post by ID
+        $post = Post::findOrFail($id);
+
+        //render view with post
+        return   response($post, 200);
+    }
+
+
     /**
      * edit
      *
@@ -136,6 +146,14 @@ class PostController extends Controller
 
         //render view with post
         return view('posts.edit', compact('post'));
+    }
+    public function editApi(string $id)
+    {
+        //get post by ID
+        $post = Post::findOrFail($id);
+
+        //render view with post
+        return   response($post, 200);
     }
 
     /**
@@ -186,6 +204,47 @@ class PostController extends Controller
         return redirect()->route('posts.index')->with(['success' => 'Data Berhasil Diubah!']);
     }
 
+    public function updateApi(Request $request, $id)
+    {
+        //validate form
+        $this->validate($request, [
+            'image'     => 'image|mimes:jpeg,jpg,png|max:2048',
+            'title'     => 'required|min:5',
+            'content'   => 'required|min:10'
+        ]);
+
+        //get post by ID
+        $post = Post::findOrFail($id);
+
+        //check if image is uploaded
+        if ($request->hasFile('image')) {
+
+            //upload new image
+            $image = $request->file('image');
+            $image->storeAs('public/posts', $image->hashName());
+
+            //delete old image
+            Storage::delete('public/posts/' . $post->image);
+
+            //update post with new image
+            $post->update([
+                'image'     => $image->hashName(),
+                'title'     => $request->title,
+                'content'   => $request->content
+            ]);
+        } else {
+
+            //update post without image
+            $post->update([
+                'title'     => $request->title,
+                'content'   => $request->content
+            ]);
+        }
+
+        //redirect to index
+        return   response($post, 200);
+    }
+
     /**
      * destroy
      *
@@ -205,5 +264,20 @@ class PostController extends Controller
 
         //redirect to index
         return redirect()->route('posts.index')->with(['success' => 'Data Berhasil Dihapus!']);
+    }
+
+    public function destroyApi($id)
+    {
+        //get post by ID
+        $post = Post::findOrFail($id);
+
+        //delete image
+        Storage::delete('public/posts/' . $post->image);
+
+        //delete post
+        $post->delete();
+
+        //redirect to index
+        return   response($post, 200);
     }
 }
