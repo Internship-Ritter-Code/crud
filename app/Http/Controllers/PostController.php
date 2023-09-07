@@ -207,11 +207,11 @@ class PostController extends Controller
     public function updateApi(Request $request, $id)
     {
         //validate form
-        $this->validate($request, [
-            'image'     => 'image|mimes:jpeg,jpg,png|max:2048',
-            'title'     => 'required|min:5',
-            'content'   => 'required|min:10'
-        ]);
+        // $this->validate($request, [
+        //     'image'     => 'image|mimes:jpeg,jpg,png|max:2048',
+        //     'title'     => 'required|min:5',
+        //     'content'   => 'required|min:10'
+        // ]);
 
         //get post by ID
         $post = Post::findOrFail($id);
@@ -227,20 +227,15 @@ class PostController extends Controller
             Storage::delete('public/posts/' . $post->image);
 
             //update post with new image
-            $post->update([
-                'image'     => $image->hashName(),
-                'title'     => $request->title,
-                'content'   => $request->content
-            ]);
-        } else {
 
-            //update post without image
-            $post->update([
-                'image' => $post->image,
-                'title'     => $request->title,
-                'content'   => $request->content
-            ]);
         }
+
+        $post->update([
+            'image' => $request->hasFile('image')  ?  $image->hasName() : $post->image,
+            'title' => $request->title ?? $post->title,
+            'content'   => $request->content ?? $post->content,
+        ]);
+
 
         //redirect to index
         return   response($post, 200);
