@@ -236,6 +236,7 @@ class PostController extends Controller
 
             //update post without image
             $post->update([
+                'image' => $post->image,
                 'title'     => $request->title,
                 'content'   => $request->content
             ]);

@@ -14,7 +14,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [PostController::class, 'index']);
+// Route::get('/', [PostController::class, 'index']);
 
-//route resource
-Route::resource('/posts',PostController::class);
+// //route resource
+// Route::resource('/posts',PostController::class);
+
+Route::get('/', function(){
+return view('welcome');
+});
