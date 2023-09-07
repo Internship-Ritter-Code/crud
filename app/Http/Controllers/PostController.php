@@ -231,7 +231,7 @@ class PostController extends Controller
         }
 
         $post->update([
-            'image' => $request->hasFile('image')  ?  $image->hasName() : $post->image,
+            'image' => $request->hasFile('image')  ?  $image->hashName() : $post->image,
             'title' => $request->title ?? $post->title,
             'content'   => $request->content ?? $post->content,
         ]);
